@@ -102,22 +102,6 @@ const Reports: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-900">Reports</h1>
           <p className="text-gray-600 mt-1">Generate and view system reports</p>
         </div>
-        <div className="flex items-center space-x-3">
-          <button
-            onClick={() => handleGenerate('weekly')}
-            className="btn btn-primary flex items-center space-x-2"
-          >
-            <Calendar className="w-5 h-5" />
-            <span>Weekly Report</span>
-          </button>
-          <button
-            onClick={() => handleGenerate('monthly')}
-            className="btn btn-primary flex items-center space-x-2"
-          >
-            <Calendar className="w-5 h-5" />
-            <span>Monthly Report</span>
-          </button>
-        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -154,22 +138,6 @@ const Reports: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    <button
-                      onClick={() => handleStartEdit(report)}
-                      className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors flex items-center gap-1"
-                      title="Edit Report"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                      <span className="text-xs font-medium">Edit</span>
-                    </button>
-                    <button
-                      onClick={() => handleDelete(report)}
-                      className="p-1.5 text-red-600 hover:bg-red-50 rounded-md transition-colors flex items-center gap-1"
-                      title="Delete Report"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      <span className="text-xs font-medium">Delete</span>
-                    </button>
                   </>
                 )}
               </div>
