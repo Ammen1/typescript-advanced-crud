@@ -17,12 +17,10 @@ const Login: React.FC = () => {
   const onSubmit = async (data: LoginCredentials) => {
     try {
       await login(data);
-      // Wait a bit to ensure state is updated
       setTimeout(() => {
         navigate('/dashboard');
       }, 100);
     } catch (error) {
-      // Error is handled by toast in auth context
       console.error('Login error:', error);
     }
   };

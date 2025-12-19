@@ -33,13 +33,6 @@ export const login = async (req: Request, res: Response) => {
       });
     }
 
-    // Block FAMILY role from logging in
-    if (user.role === UserRole.FAMILY) {
-      return res.status(403).json({
-        success: false,
-        message: 'Family members are not allowed to login to the web dashboard. Please contact the childcare center for information about your child.',
-      });
-    }
 
     // Generate token
     const token = generateToken({
