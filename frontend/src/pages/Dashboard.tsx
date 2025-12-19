@@ -84,7 +84,7 @@ const Dashboard: React.FC = () => {
         {stats
           .filter((stat) => {
             if (user?.role === UserRole.ADMIN && stat.name === 'Total Children') return false;
-            if (user?.role === UserRole.GUARDIAN && stat.name === 'Total Users') return false;
+            if ((user?.role === UserRole.GUARDIAN || user?.role === UserRole.MANAGER) && stat.name === 'Total Users') return false;
             return true;
           })
           .map((stat) => {
