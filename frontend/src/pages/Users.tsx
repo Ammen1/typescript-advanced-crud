@@ -5,6 +5,7 @@ import { userService } from '../services/userService';
 import { User, UserRole } from '../types';
 import toast from 'react-hot-toast';
 import UserModal from '../components/Modals/UserModal';
+import { useAuth } from '../contexts/AuthContext';
 
 const Users: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,6 +54,8 @@ const Users: React.FC = () => {
     setIsModalOpen(false);
     setEditingUser(null);
   };
+
+  const { user: currentUser } = useAuth();
 
   const getRoleBadgeColor = (role: UserRole) => {
     switch (role) {
@@ -137,15 +140,17 @@ const Users: React.FC = () => {
                     >
                       <Edit className="w-4 h-4" />
                     </button>
-                    <button
-                      onClick={() =>
-                        statusMutation.mutate({ id: user._id, isActive: !user.isActive })
-                      }
-                      className="p-2 text-green-600 hover:bg-green-50 rounded"
-                      title={user.isActive ? 'Deactivate User' : 'Activate User'}
-                    >
-                      {user.isActive ? <UserX className="w-4 h-4" /> : <UserCheck className="w-4 h-4" />}
-                    </button>
+                    {currentUser?.role === UserRole.ADMIN && (
+                      <button
+                        onClick={() =>
+                          statusMutation.mutate({ id: user._id, isActive: !user.isActive })
+                        }
+                        className="p-2 text-green-600 hover:bg-green-50 rounded"
+                        title={user.isActive ? 'Deactivate User' : 'Activate User'}
+                      >
+                        {user.isActive ? <UserX className="w-4 h-4" /> : <UserCheck className="w-4 h-4" />}
+                      </button>
+                    )}
                     <button
                       onClick={() => handleDelete(user._id)}
                       className="p-2 text-red-600 hover:bg-red-50 rounded"

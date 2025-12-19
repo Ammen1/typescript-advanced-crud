@@ -9,14 +9,14 @@ const router = Router();
 // All child routes require authentication
 router.use(authenticate);
 
-// Only Admin can register/manage children
-router.post('/register', authorize(UserRole.ADMIN, UserRole.MANAGER), childController.registerChild);
+// Only Manager can register/manage children (Admins removed)
+router.post('/register', authorize(UserRole.MANAGER), childController.registerChild);
 router.get('/my-children', childController.getMyChildren);
-router.get('/all', authorize(UserRole.ADMIN, UserRole.MANAGER, UserRole.GUARDIAN), childController.getAllChildren);
+router.get('/all', authorize(UserRole.MANAGER, UserRole.GUARDIAN), childController.getAllChildren);
 router.get('/registration/:registrationNumber', childController.getChildByRegistrationNumber);
 router.get('/:id', childController.getChildById);
-router.put('/:id', authorize(UserRole.MANAGER, UserRole.ADMIN, UserRole.FAMILY), childController.updateChild);
-router.put('/:id/delete', authorize(UserRole.MANAGER, UserRole.ADMIN), childController.deleteChild);
+router.put('/:id', authorize(UserRole.MANAGER, UserRole.FAMILY), childController.updateChild);
+router.put('/:id/delete', authorize(UserRole.MANAGER), childController.deleteChild);
 
 export default router;
 

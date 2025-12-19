@@ -9,12 +9,12 @@ const router = Router();
 // All attendance routes require authentication
 router.use(authenticate);
 
-// Manager, Guardian and Admin can mark attendance
-router.post('/mark', authorize(UserRole.MANAGER, UserRole.GUARDIAN, UserRole.ADMIN), attendanceController.markAttendance);
-router.put('/:id', authorize(UserRole.MANAGER, UserRole.GUARDIAN, UserRole.ADMIN), attendanceController.updateAttendance);
+// Manager and Guardian can mark attendance (Admin removed)
+router.post('/mark', authorize(UserRole.MANAGER, UserRole.GUARDIAN), attendanceController.markAttendance);
+router.put('/:id', authorize(UserRole.MANAGER, UserRole.GUARDIAN), attendanceController.updateAttendance);
 router.get('/child/:childId', attendanceController.getAttendanceByChild);
-router.get('/daily', authorize(UserRole.MANAGER, UserRole.ADMIN), attendanceController.getDailyAttendance);
-router.get('/', authorize(UserRole.ADMIN, UserRole.MANAGER), attendanceController.getAllAttendance);
+router.get('/daily', authorize(UserRole.MANAGER), attendanceController.getDailyAttendance);
+router.get('/', authorize(UserRole.MANAGER), attendanceController.getAllAttendance);
 
 export default router;
 

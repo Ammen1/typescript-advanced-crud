@@ -12,6 +12,7 @@ import attendanceRoutes from './routes/attendanceRoutes';
 import notificationRoutes from './routes/notificationRoutes';
 import evaluationRoutes from './routes/evaluationRoutes';
 import reportRoutes from './routes/reportRoutes';
+import { initializeScheduledJobs, stopScheduledJobs } from './services/scheduledJobs';
 
 // Load environment variables
 dotenv.config();
@@ -64,6 +65,22 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`API Documentation available at http://localhost:${PORT}/api`);
+
+  // Initialize scheduled jobs after server starts
+  initializeScheduledJobs();
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM signal received: closing HTTP server');
+  stopScheduledJobs();
+  process.exit(0);
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT signal received: closing HTTP server');
+  stopScheduledJobs();
+  process.exit(0);
 });
 
 export default app;

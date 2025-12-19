@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Edit, Trash2, Search, X } from 'lucide-react';
-import { childService, CreateChildData } from '../services/childService';
+import { childService } from '../services/childService';
 import { Child } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { UserRole } from '../types';
@@ -86,8 +86,8 @@ const Children: React.FC = () => {
     }
   };
 
-  // Admin and Manager can register or edit children
-  const canEdit = user?.role === UserRole.ADMIN || user?.role === UserRole.MANAGER;
+  // Only Manager can register or edit children
+  const canEdit = user?.role === UserRole.MANAGER;
 
   if (isLoading) {
     return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Users, Baby, Calendar, Bell, TrendingUp, FileText, MessageSquare } from 'lucide-react';
+import { Users, Baby, Calendar, Bell, TrendingUp, FileText } from 'lucide-react';
 import { reportService } from '../services/reportService';
 import { evaluationService } from '../services/evaluationService';
 import { notificationService } from '../services/notificationService';
@@ -82,7 +82,11 @@ const Dashboard: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats
-          .filter((stat) => user?.role !== UserRole.ADMIN || stat.name !== 'Total Children')
+          .filter((stat) => {
+            if (user?.role === UserRole.ADMIN && stat.name === 'Total Children') return false;
+            if (user?.role === UserRole.GUARDIAN && stat.name === 'Total Users') return false;
+            return true;
+          })
           .map((stat) => {
             const Icon = stat.icon;
             return (
@@ -122,18 +126,6 @@ const Dashboard: React.FC = () => {
                   className="w-full btn btn-secondary text-left block text-center"
                 >
                   Send Notification
-                </a>
-                <a
-                  href="/attendance"
-                  className="w-full btn btn-secondary text-left block text-center"
-                >
-                  Control Attendance
-                </a>
-                <a
-                  href="/evaluations"
-                  className="w-full btn btn-secondary text-left block text-center"
-                >
-                  Child Evaluations
                 </a>
               </>
             )}
@@ -191,6 +183,12 @@ const Dashboard: React.FC = () => {
                   className="w-full btn btn-secondary text-left block text-center"
                 >
                   Notifications
+                </a>
+                <a
+                  href="/notifications"
+                  className="w-full btn btn-secondary text-left block text-center"
+                >
+                  Send Notification
                 </a>
               </>
             )}

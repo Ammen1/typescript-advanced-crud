@@ -27,7 +27,6 @@ const ChildModal: React.FC<ChildModalProps> = ({ child, onClose, onSuccess }) =>
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
   } = useForm<CreateChildData & { allergies?: string; medications?: string }>({
     defaultValues: child
       ? {
@@ -36,8 +35,8 @@ const ChildModal: React.FC<ChildModalProps> = ({ child, onClose, onSuccess }) =>
         dateOfBirth: child.dateOfBirth.split('T')[0],
         gender: child.gender,
         registrationNumber: child.registrationNumber,
-        parentId: child.parentId,
-        guardianId: child.guardianId,
+        parentId: typeof child.parentId === 'string' ? child.parentId : child.parentId._id,
+        guardianId: child.guardianId ? (typeof child.guardianId === 'string' ? child.guardianId : child.guardianId._id) : undefined,
         emergencyContact: child.emergencyContact,
         medicalInfo: {
           allergies: child.medicalInfo?.allergies || [],
@@ -80,8 +79,8 @@ const ChildModal: React.FC<ChildModalProps> = ({ child, onClose, onSuccess }) =>
         dateOfBirth: child.dateOfBirth.split('T')[0],
         gender: child.gender,
         registrationNumber: child.registrationNumber,
-        parentId: child.parentId,
-        guardianId: child.guardianId,
+        parentId: typeof child.parentId === 'string' ? child.parentId : child.parentId._id,
+        guardianId: child.guardianId ? (typeof child.guardianId === 'string' ? child.guardianId : child.guardianId._id) : undefined,
         emergencyContact: child.emergencyContact,
         allergies: child.medicalInfo?.allergies?.join(', ') || '',
         medications: child.medicalInfo?.medications?.join(', ') || '',
@@ -262,8 +261,13 @@ const ChildModal: React.FC<ChildModalProps> = ({ child, onClose, onSuccess }) =>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
                 <input
                   type="tel"
+                  placeholder="+251912345678 or 0912345678"
                   {...register('emergencyContact.phoneNumber', {
                     required: 'Phone number is required',
+                    pattern: {
+                      value: /^(\+251|0)[79]\d{8}$/,
+                      message: 'Invalid phone number. Use format: +251912345678 or 0912345678'
+                    }
                   })}
                   className="input"
                 />

@@ -49,6 +49,10 @@ const ChildSchema = new Schema<IChild>(
       phoneNumber: {
         type: String,
         required: [true, 'Emergency contact phone is required'],
+        match: [
+          /^(\+251|0)[79]\d{8}$/,
+          'Invalid phone number. Use format: +251912345678 or 0912345678'
+        ],
       },
     },
     medicalInfo: {

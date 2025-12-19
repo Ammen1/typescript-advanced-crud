@@ -40,6 +40,10 @@ const UserSchema = new Schema<IUser>(
       type: String,
       required: [true, 'Phone number is required'],
       trim: true,
+      match: [
+        /^(\+251|0)[79]\d{8}$/,
+        'Invalid phone number. Use format: +251912345678 or 0912345678'
+      ],
     },
     isActive: {
       type: Boolean,

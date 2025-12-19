@@ -174,7 +174,14 @@ const UserModal: React.FC<UserModalProps> = ({ user, onClose, onSuccess }) => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
             <input
               type="tel"
-              {...register('phoneNumber', { required: 'Phone number is required' })}
+              placeholder="+251912345678 or 0912345678"
+              {...register('phoneNumber', { 
+                required: 'Phone number is required',
+                pattern: {
+                  value: /^(\+251|0)[79]\d{8}$/,
+                  message: 'Invalid phone number. Use format: +251912345678 or 0912345678'
+                }
+              })}
               className="input"
             />
             {errors.phoneNumber && (

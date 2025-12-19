@@ -18,6 +18,9 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ date, onClose, onSucc
     queryFn: childService.getAll,
   });
 
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const initialDate = date < todayStr ? todayStr : date;
+
   const {
     register,
     handleSubmit,
@@ -25,7 +28,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ date, onClose, onSucc
     watch,
   } = useForm<MarkAttendanceData & { checkInTime?: string }>({
     defaultValues: {
-      date,
+      date: initialDate,
       status: 'PRESENT',
       checkInTime: new Date().toISOString().slice(0, 16),
     },
@@ -88,8 +91,12 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ date, onClose, onSucc
             <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
             <input
               type="date"
-              {...register('date', { required: 'Date is required' })}
+              {...register('date', {
+                required: 'Date is required',
+                validate: (value) => value >= todayStr || 'Date cannot be in the past',
+              })}
               className="input"
+              min={todayStr}
             />
             {errors.date && (
               <p className="text-sm text-red-600 mt-1">{errors.date.message}</p>

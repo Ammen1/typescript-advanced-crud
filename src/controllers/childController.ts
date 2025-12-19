@@ -6,6 +6,12 @@ import { User } from '../models/User';
 export const registerChild = async (req: Request, res: Response) => {
   const authReq = req as unknown as AuthRequest;
   try {
+    if (authReq.user.role === 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        message: 'Admins are restricted from registering children',
+      });
+    }
     const {
       firstName,
       lastName,
@@ -192,6 +198,12 @@ export const getChildByRegistrationNumber = async (req: Request, res: Response) 
 export const updateChild = async (req: Request, res: Response) => {
   const authReq = req as unknown as AuthRequest;
   try {
+    if (authReq.user.role === 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        message: 'Admins are restricted from updating child information',
+      });
+    }
     const {
       firstName,
       lastName,
@@ -246,6 +258,12 @@ export const updateChild = async (req: Request, res: Response) => {
 export const deleteChild = async (req: Request, res: Response) => {
   const authReq = req as unknown as AuthRequest;
   try {
+    if (authReq.user.role === 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        message: 'Admins are restricted from deactivating children',
+      });
+    }
     const child = await Child.findByIdAndUpdate(
       req.params.id,
       { status: 'INACTIVE' },

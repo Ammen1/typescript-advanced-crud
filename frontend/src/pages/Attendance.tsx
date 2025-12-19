@@ -4,11 +4,17 @@ import { Plus, Calendar, CheckCircle, XCircle, Clock } from 'lucide-react';
 import { attendanceService } from '../services/attendanceService';
 import AttendanceModal from '../components/Modals/AttendanceModal';
 import { format } from 'date-fns';
+import { UserRole } from '../types';
+import { useAuth } from '../contexts/AuthContext';
 
 const Attendance: React.FC = () => {
+  const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
   const queryClient = useQueryClient();
+
+  const todayStr = format(new Date(), 'yyyy-MM-dd');
+  const isPastDate = selectedDate < todayStr;
 
   const { data: attendance = [], isLoading } = useQuery({
     queryKey: ['attendance', selectedDate],
@@ -66,10 +72,12 @@ const Attendance: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-900">Attendance</h1>
           <p className="text-gray-600 mt-1">Track daily attendance records</p>
         </div>
-        <button onClick={handleAdd} className="btn btn-primary flex items-center space-x-2">
-          <Plus className="w-5 h-5" />
-          <span>Mark Attendance</span>
-        </button>
+        {user?.role !== UserRole.ADMIN && (
+          <button onClick={handleAdd} className="btn btn-primary flex items-center space-x-2" disabled={isPastDate}>
+            <Plus className="w-5 h-5" />
+            <span>{isPastDate ? 'Cannot mark past date' : 'Mark Attendance'}</span>
+          </button>
+        )}
       </div>
 
       <div className="card">
@@ -80,7 +88,11 @@ const Attendance: React.FC = () => {
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
             className="input w-auto"
+            min={todayStr}
           />
+          {isPastDate && (
+            <p className="text-sm text-red-600 mt-2">Cannot mark attendance for past dates</p>
+          )}
         </div>
 
         <div className="overflow-x-auto">

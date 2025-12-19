@@ -47,7 +47,7 @@ const Evaluations: React.FC = () => {
     setEditingEvaluation(null);
   };
 
-  const canEdit = user?.role === UserRole.ADMIN || user?.role === UserRole.MANAGER || user?.role === UserRole.GUARDIAN;
+  const canEdit = user?.role === UserRole.MANAGER || user?.role === UserRole.GUARDIAN;
 
   const getCategoryBadgeColor = (category: string) => {
     switch (category) {

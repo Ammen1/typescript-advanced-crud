@@ -6,6 +6,12 @@ import { Child } from '../models/Child';
 export const createEvaluation = async (req: Request, res: Response) => {
   const authReq = req as unknown as AuthRequest;
   try {
+    if (authReq.user.role === 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        message: 'Admins are restricted from creating evaluations',
+      });
+    }
     const { childId, category, observation, recommendation, attachments } = req.body;
 
     if (!childId || !category || !observation) {
@@ -144,6 +150,12 @@ export const getEvaluationById = async (req: Request, res: Response) => {
 export const updateEvaluation = async (req: Request, res: Response) => {
   const authReq = req as unknown as AuthRequest;
   try {
+    if (authReq.user.role === 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        message: 'Admins are restricted from updating evaluations',
+      });
+    }
     const { observation, recommendation, attachments, category } = req.body;
 
     const evaluation = await Evaluation.findById(req.params.id);
@@ -156,7 +168,7 @@ export const updateEvaluation = async (req: Request, res: Response) => {
     }
 
     // Check if user created this evaluation
-    if (evaluation.evaluatorId.toString() !== authReq.user.userId && authReq.user.role !== 'ADMIN') {
+    if (evaluation.evaluatorId.toString() !== authReq.user.userId) {
       return res.status(403).json({
         success: false,
         message: 'Access denied',
@@ -187,6 +199,12 @@ export const updateEvaluation = async (req: Request, res: Response) => {
 export const deleteEvaluation = async (req: Request, res: Response) => {
   const authReq = req as unknown as AuthRequest;
   try {
+    if (authReq.user.role === 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        message: 'Admins are restricted from deleting evaluations',
+      });
+    }
     const evaluation = await Evaluation.findById(req.params.id);
 
     if (!evaluation) {
@@ -196,8 +214,8 @@ export const deleteEvaluation = async (req: Request, res: Response) => {
       });
     }
 
-    // Check if user created this evaluation or is admin
-    if (evaluation.evaluatorId.toString() !== authReq.user.userId && authReq.user.role !== 'ADMIN') {
+    // Check if user created this evaluation
+    if (evaluation.evaluatorId.toString() !== authReq.user.userId) {
       return res.status(403).json({
         success: false,
         message: 'Access denied',

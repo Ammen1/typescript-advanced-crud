@@ -7,12 +7,31 @@ import { AttendanceStatus } from '../types';
 export const markAttendance = async (req: Request, res: Response) => {
   const authReq = req as unknown as AuthRequest;
   try {
+    if (authReq.user.role === 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        message: 'Admins are restricted from marking attendance',
+      });
+    }
     const { childId, date, checkInTime, status, notes } = req.body;
 
     if (!childId || !date || !checkInTime) {
       return res.status(400).json({
         success: false,
         message: 'Please provide child ID, date, and check-in time',
+      });
+    }
+
+    // Check if date is in the past
+    const selectedDate = new Date(date);
+    selectedDate.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate < today) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot mark attendance for past dates',
       });
     }
 
@@ -64,6 +83,12 @@ export const markAttendance = async (req: Request, res: Response) => {
 export const updateAttendance = async (req: Request, res: Response) => {
   const authReq = req as unknown as AuthRequest;
   try {
+    if (authReq.user.role === 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        message: 'Admins are restricted from updating attendance records',
+      });
+    }
     const { checkOutTime, status, notes } = req.body;
 
     const attendance = await Attendance.findById(req.params.id);
